@@ -43,12 +43,13 @@ class Game(object):
         print("Navios Restantes: ", self.has_ships, end="\n\n")
         is_over = True if self.has_ships == 0 else False
         if is_over: 
-            print("Jogo Acabou!!")
+            print("Fim de Jogo!\n")
+            print(f"Pontuação:\n{self.p1.name}: {self.p1.points}\n{self.p2.name}: {self.p2.points}\n")
+            print(f"{self.p1.name if self.p1.points > self.p2.points else self.p2.name} ganhou!")
             exit()
 
     def main(self):
         # Cria duas threads para simular dois jogadores
-       
 
         threads = []
         threads.append(threading.Thread(target=self.p1.run_player, args=(self, self.p2 )))
@@ -69,6 +70,7 @@ class Game(object):
 class Player(object):
     def __init__(self, name: str) -> None:
         self.name = name
+        self.points = 0
         pass
 
     # A função shoot tenta atirar em uma determinada posição do tabuleiro
@@ -85,6 +87,7 @@ class Player(object):
         if game.board[x][y] == 'O':
             print(f'{self.name} acertou um navio na posição ({x},{y}) \o/!')
             game.has_ships -= 1
+            self.points += 1
         else:
             print(f'ERROU! {self.name} só acertou água na posição ({x},{y})!')
 
@@ -111,8 +114,8 @@ class Player(object):
             
             game.check_ships()
 
-p1 = Player("Rogério")
-p2 = Player("Raimunda")
+p1 = Player(input("Insira o nome do jogador 1: "))
+p2 = Player(input("Insira o nome do jogador 2: "))
 
 game = Game(p1, p2)
 game.main()
